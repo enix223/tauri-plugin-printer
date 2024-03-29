@@ -143,7 +143,7 @@ const print_buffer = async (bufOpts, options) => {
         }
     }
     const printerSettingStr = `-print-settings ${rangeStr},${printerSettings.paper},${printerSettings.method},${printerSettings.scale},${printerSettings.orientation},${printerSettings.color_type},${printerSettings.repeat}x`;
-    const filename = `${Math.floor(Math.random() * 100000000)}_${Date.now()}.${bufOpts.fileExtention}`;
+    const filename = `${Math.floor(Math.random() * 100000000)}_${Date.now()}.${bufOpts.fileExtension}`;
     const tempPath = await (0, tauri_1.invoke)('plugin:printer|create_temp_file', {
         buffer_data: buffer_1.Buffer.from(bufOpts.buffer).toString('base64'),
         filename

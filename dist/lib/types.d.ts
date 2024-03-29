@@ -33,7 +33,7 @@ export type PrintData = {
 };
 export type PrintBufferOption = {
     buffer: ArrayBuffer;
-    fileExtention: string;
+    fileExtension: string;
 };
 export type PrintStyle = {
     accentColor?: string;

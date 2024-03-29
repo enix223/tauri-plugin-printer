@@ -138,7 +138,7 @@ export const print_buffer = async (bufOpts: PrintBufferOption, options: PrintOpt
     
     const printerSettingStr = `-print-settings ${rangeStr},${printerSettings.paper},${printerSettings.method},${printerSettings.scale},${printerSettings.orientation},${printerSettings.color_type},${printerSettings.repeat}x` 
 
-    const filename: string = `${Math.floor(Math.random() * 100000000)}_${Date.now()}.${bufOpts.fileExtention}`;
+    const filename: string = `${Math.floor(Math.random() * 100000000)}_${Date.now()}.${bufOpts.fileExtension}`;
     const tempPath: string = await invoke('plugin:printer|create_temp_file', {
         buffer_data: Buffer.from(bufOpts.buffer).toString('base64'),
         filename
