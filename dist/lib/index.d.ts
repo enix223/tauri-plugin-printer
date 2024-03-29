@@ -7,8 +7,8 @@ import { PrintData } from './types';
  */
 export declare const printers: (id?: string | null) => Promise<Printer[]>;
 /**
- * Print with array buffer
- * @params data {ArrayBuffer} file binary data
+ * Print with array buffer base64
+ * @params data {ArrayBuffer} file data encode with base64
  * @param options {PrintOptions} printer options
  */
 export declare const print_buffer: (bufOpts: PrintBufferOption, options: PrintOptions) => Promise<{

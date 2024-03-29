@@ -95,8 +95,8 @@ export const printers = async (id: string|null = null): Promise<Printer[]> => {
 }
 
 /**
- * Print with array buffer
- * @params data {ArrayBuffer} file binary data
+ * Print with array buffer base64
+ * @params data {ArrayBuffer} file data encode with base64
  * @param options {PrintOptions} printer options
  */
 export const print_buffer = async (bufOpts: PrintBufferOption, options: PrintOptions) => {
@@ -140,7 +140,7 @@ export const print_buffer = async (bufOpts: PrintBufferOption, options: PrintOpt
 
     const filename: string = `${Math.floor(Math.random() * 100000000)}_${Date.now()}.${bufOpts.fileExtension}`;
     const tempPath: string = await invoke('plugin:printer|create_temp_file', {
-        buffer_data: Buffer.from(bufOpts.buffer).toString('base64'),
+        buffer_data: bufOpts.bufferBase64,
         filename
     })
 

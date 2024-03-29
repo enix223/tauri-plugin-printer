@@ -32,7 +32,7 @@ export type PrintData = {
     tableFooterStyle?: PrintStyle;
 };
 export type PrintBufferOption = {
-    buffer: ArrayBuffer;
+    bufferBase64: string;
     fileExtension: string;
 };
 export type PrintStyle = {
