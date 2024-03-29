@@ -5,7 +5,7 @@ export type PaperOption = "A2" | "A3" | "A4" | "A5" | "A6" | "letter" | "legal" 
 export type OrientationOption = "portrait" | "landscape" 
 
 // new types
-export type PrintType = "text" | "barCode" | "qrCode" | "image" | "table";
+export type PrintType = "text" | "barCode" | "qrCode" | "image" | "table" | "imageBase64";
 export type PrintPosition = "left" | "center" | "right";
 export type PrintTableField = {
 	type: "text" | "image";
