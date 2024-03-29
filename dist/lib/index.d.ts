@@ -1,4 +1,4 @@
-import { Jobs, PrintFileOptions, PrintOptions, Printer, ResponseResult } from './types';
+import { Jobs, PrintBufferOption, PrintFileOptions, PrintOptions, Printer, ResponseResult } from './types';
 import { PrintData } from './types';
 /**
  * Get list printers.
@@ -11,7 +11,7 @@ export declare const printers: (id?: string | null) => Promise<Printer[]>;
  * @params data {ArrayBuffer} file binary data
  * @param options {PrintOptions} printer options
  */
-export declare const print_buffer: (buffer: ArrayBuffer, options: PrintOptions) => Promise<{
+export declare const print_buffer: (bufOpts: PrintBufferOption, options: PrintOptions) => Promise<{
     success: boolean;
     message: string;
 }>;

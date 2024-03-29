@@ -100,7 +100,7 @@ exports.printers = printers;
  * @params data {ArrayBuffer} file binary data
  * @param options {PrintOptions} printer options
  */
-const print_buffer = async (buffer, options) => {
+const print_buffer = async (bufOpts, options) => {
     let id = "";
     if (typeof options.id != 'undefined') {
         id = decodeBase64(options.id);
@@ -143,9 +143,9 @@ const print_buffer = async (buffer, options) => {
         }
     }
     const printerSettingStr = `-print-settings ${rangeStr},${printerSettings.paper},${printerSettings.method},${printerSettings.scale},${printerSettings.orientation},${printerSettings.color_type},${printerSettings.repeat}x`;
-    const filename = `${Math.floor(Math.random() * 100000000)}_${Date.now()}.pdf`;
+    const filename = `${Math.floor(Math.random() * 100000000)}_${Date.now()}.${bufOpts.fileExtention}`;
     const tempPath = await (0, tauri_1.invoke)('plugin:printer|create_temp_file', {
-        buffer_data: buffer_1.Buffer.from(buffer).toString('base64'),
+        buffer_data: buffer_1.Buffer.from(bufOpts.buffer).toString('base64'),
         filename
     });
     if (tempPath.length == 0)

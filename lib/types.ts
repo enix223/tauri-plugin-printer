@@ -34,6 +34,11 @@ export type PrintData = {
 	tableFooterStyle?: PrintStyle;
 }
 
+export type PrintBufferOption = {
+	buffer: ArrayBuffer;
+	fileExtention: string;
+}
+
 export type PrintStyle = {
     accentColor?: string;
 	alignContent?: string;

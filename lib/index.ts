@@ -1,7 +1,7 @@
 import { invoke } from '@tauri-apps/api/tauri'
 import { jobStatus } from './constants'
 import { Buffer } from 'buffer'
-import { Jobs, PrintFileOptions, PrintOptions, PrintSettings, Printer, ResponseResult } from './types'
+import { Jobs, PrintBufferOption, PrintFileOptions, PrintOptions, PrintSettings, Printer, ResponseResult } from './types'
 import { PrintData } from './types'
 import { ResponseType, getClient } from '@tauri-apps/api/http';
 import mime from "mime";
@@ -99,7 +99,7 @@ export const printers = async (id: string|null = null): Promise<Printer[]> => {
  * @params data {ArrayBuffer} file binary data
  * @param options {PrintOptions} printer options
  */
-export const print_buffer = async (buffer: ArrayBuffer, options: PrintOptions) => {
+export const print_buffer = async (bufOpts: PrintBufferOption, options: PrintOptions) => {
     let id: string = "";
     if (typeof options.id != 'undefined'){
         id = decodeBase64(options.id);
@@ -138,9 +138,9 @@ export const print_buffer = async (buffer: ArrayBuffer, options: PrintOptions) =
     
     const printerSettingStr = `-print-settings ${rangeStr},${printerSettings.paper},${printerSettings.method},${printerSettings.scale},${printerSettings.orientation},${printerSettings.color_type},${printerSettings.repeat}x` 
 
-    const filename: string = `${Math.floor(Math.random() * 100000000)}_${Date.now()}.pdf`;
+    const filename: string = `${Math.floor(Math.random() * 100000000)}_${Date.now()}.${bufOpts.fileExtention}`;
     const tempPath: string = await invoke('plugin:printer|create_temp_file', {
-        buffer_data: Buffer.from(buffer).toString('base64'),
+        buffer_data: Buffer.from(bufOpts.buffer).toString('base64'),
         filename
     })
 
