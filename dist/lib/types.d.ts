@@ -3,7 +3,7 @@ export type ScaleOption = "noscale" | "shrink" | "fit";
 export type MethodOption = "duplex" | "duplexshort" | "simplex";
 export type PaperOption = "A2" | "A3" | "A4" | "A5" | "A6" | "letter" | "legal" | "tabloid";
 export type OrientationOption = "portrait" | "landscape";
-export type PrintType = "text" | "barCode" | "qrCode" | "image" | "table";
+export type PrintType = "text" | "barCode" | "qrCode" | "image" | "table" | "imageBase64";
 export type PrintPosition = "left" | "center" | "right";
 export type PrintTableField = {
     type: "text" | "image";

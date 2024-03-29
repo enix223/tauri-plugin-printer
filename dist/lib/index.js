@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.remove_job = exports.pause_job = exports.resume_job = exports.restart_job = exports.job = exports.jobs = exports.print_file = exports.print = exports.printers = void 0;
+exports.remove_job = exports.pause_job = exports.resume_job = exports.restart_job = exports.job = exports.jobs = exports.print_file = exports.print = exports.print_buffer = exports.printers = void 0;
 const tauri_1 = require("@tauri-apps/api/tauri");
 const constants_1 = require("./constants");
 const buffer_1 = require("buffer");
@@ -96,6 +96,74 @@ const printers = async (id = null) => {
 };
 exports.printers = printers;
 /**
+ * Print with array buffer
+ * @params data {ArrayBuffer} file binary data
+ * @param options {PrintOptions} printer options
+ */
+const print_buffer = async (buffer, options) => {
+    let id = "";
+    if (typeof options.id != 'undefined') {
+        id = decodeBase64(options.id);
+    }
+    if (typeof options.name != 'undefined') {
+        id = options.name;
+    }
+    // 
+    const printerSettings = {
+        paper: 'A4',
+        method: 'simplex',
+        scale: 'noscale',
+        orientation: 'portrait',
+        repeat: 1,
+        color_type: "color"
+    };
+    if (typeof options?.print_setting?.paper != "undefined")
+        printerSettings.paper = options.print_setting.paper;
+    if (typeof options?.print_setting?.method != "undefined")
+        printerSettings.method = options.print_setting.method;
+    if (typeof options?.print_setting?.scale != "undefined")
+        printerSettings.scale = options.print_setting.scale;
+    if (typeof options?.print_setting?.orientation != "undefined")
+        printerSettings.orientation = options.print_setting.orientation;
+    if (typeof options?.print_setting?.repeat != "undefined")
+        printerSettings.repeat = options.print_setting.repeat;
+    if (typeof options?.print_setting?.color_type != "undefined")
+        printerSettings.color_type = options.print_setting.color_type;
+    if (typeof options?.print_setting?.range != "undefined")
+        printerSettings.range = options.print_setting.range;
+    let rangeStr = "";
+    if (printerSettings.range) {
+        if (typeof printerSettings.range == 'string') {
+            if (!(new RegExp(/^[0-9,]+$/).test(printerSettings.range)))
+                throw new Error('Invalid range value ');
+            rangeStr = printerSettings.range[printerSettings.range.length - 1] != "," ? printerSettings.range : printerSettings.range.substring(0, printerSettings.range.length - 1);
+        }
+        else if (printerSettings.range.from) {
+            rangeStr = `${printerSettings.range.from}-${printerSettings.range.to}`;
+        }
+    }
+    const printerSettingStr = `-print-settings ${rangeStr},${printerSettings.paper},${printerSettings.method},${printerSettings.scale},${printerSettings.orientation},${printerSettings.color_type},${printerSettings.repeat}x`;
+    const filename = `${Math.floor(Math.random() * 100000000)}_${Date.now()}.pdf`;
+    const tempPath = await (0, tauri_1.invoke)('plugin:printer|create_temp_file', {
+        buffer_data: buffer_1.Buffer.from(buffer).toString('base64'),
+        filename
+    });
+    if (tempPath.length == 0)
+        throw new Error("Fail to create temp file");
+    const optionsParams = {
+        id: `"${id}"`,
+        path: tempPath,
+        printer_setting: printerSettingStr,
+        remove_after_print: typeof options.remove_temp != undefined ? options.remove_temp : true
+    };
+    await (0, tauri_1.invoke)('plugin:printer|print_pdf', optionsParams);
+    return {
+        success: true,
+        message: "OK"
+    };
+};
+exports.print_buffer = print_buffer;
+/**
  * Print.
  * @params first_param:dataprint, second_param: Print Options
  * @returns A process status.
@@ -134,6 +202,35 @@ const print = async (data, options) => {
                 responseType: http_1.ResponseType.Binary
             });
             image.src = `data:${mime_1.default.getType(item.url)};base64,${buffer_1.Buffer.from(response.data).toString('base64')}`;
+            if (item.width) {
+                image.width = item.width;
+            }
+            if (item.height) {
+                image.height = item.height;
+            }
+            if (item.style) {
+                const styles = item.style;
+                for (const style of Object.keys(styles)) {
+                    const key = style;
+                    image.style[key] = styles[key];
+                }
+            }
+            wrapperImage.appendChild(image);
+            container.appendChild(wrapperImage);
+        }
+        if (item.type == 'imageBase64') {
+            const wrapperImage = document.createElement('div');
+            wrapperImage.style.width = "100%";
+            if (item?.position == "center") {
+                wrapperImage.style.display = 'flex';
+                wrapperImage.style.justifyContent = 'center';
+            }
+            if (typeof item.url == "undefined")
+                throw new Error('Image required {url}');
+            const image = document.createElement('img');
+            image.width = 100,
+                image.height = 100;
+            image.src = item.type;
             if (item.width) {
                 image.width = item.width;
             }

@@ -7,6 +7,15 @@ import { PrintData } from './types';
  */
 export declare const printers: (id?: string | null) => Promise<Printer[]>;
 /**
+ * Print with array buffer
+ * @params data {ArrayBuffer} file binary data
+ * @param options {PrintOptions} printer options
+ */
+export declare const print_buffer: (buffer: ArrayBuffer, options: PrintOptions) => Promise<{
+    success: boolean;
+    message: string;
+}>;
+/**
  * Print.
  * @params first_param:dataprint, second_param: Print Options
  * @returns A process status.
